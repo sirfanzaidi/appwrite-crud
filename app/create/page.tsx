@@ -10,6 +10,7 @@ export default function CreatePage() {
 
   const router = useRouter();
 
+  // Handle input changes for both text input and textarea
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -19,9 +20,11 @@ export default function CreatePage() {
     }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Simple validation
     if (!formData.term || !formData.interpretation) {
       setError("Please fill in all the fields.");
       return;
@@ -43,9 +46,10 @@ export default function CreatePage() {
         throw new Error("Failed to create interpretation.");
       }
 
+      // Redirect to the home page after successful creation
       router.push(`/`);
-    } catch (err) {
-      console.error("Error while creating interpretation:", err);
+    } catch (error) {
+      console.error("Error while creating interpretation:", error);
       setError("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
@@ -53,17 +57,15 @@ export default function CreatePage() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-        Add New Interpretation
-      </h2>
-      <form onSubmit={handleSubmit} className="flex gap-4 flex-col">
+    <div className="max-w-md mx-auto">
+      <h2 className="text-2xl font-bold my-8">Add New Interpretation</h2>
+      <form onSubmit={handleSubmit} className="flex gap-3 flex-col">
         <input
           type="text"
           name="term"
           placeholder="Enter term"
           value={formData.term}
-          className="py-2 px-4 border rounded-md focus:ring-2 focus:ring-blue-500"
+          className="py-2 px-4 border rounded-md"
           onChange={handleInputChange}
           required
         />
@@ -72,16 +74,16 @@ export default function CreatePage() {
           rows={4}
           placeholder="Enter interpretation"
           value={formData.interpretation}
-          className="py-2 px-4 border rounded-md focus:ring-2 focus:ring-blue-500"
+          className="py-2 px-4 border rounded-md"
           onChange={handleInputChange}
           required
         ></textarea>
         <button
-          className="bg-blue-500 text-white mt-5 px-4 py-2 rounded-md cursor-pointer hover:bg-blue-600"
+          className="bg-black text-white mt-5 px-4 py-2 rounded-md cursor-pointer"
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? "Adding..." : "Add Interpretation" }
+          {isLoading ? "Adding..." : "Add Interpretation"}
         </button>
       </form>
       {error && <p className="text-red-500 mt-4">{error}</p>}
