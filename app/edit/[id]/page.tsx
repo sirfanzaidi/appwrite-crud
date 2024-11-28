@@ -1,7 +1,6 @@
-"use client";
-
+"use client"
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 
 export default function EditPage({ params }: { params: { id: string } }) {
   const [formData, setFormData] = useState({ term: "", interpretation: "" });
@@ -15,22 +14,17 @@ export default function EditPage({ params }: { params: { id: string } }) {
       try {
         const response = await fetch(`/api/interpretations/${params.id}`);
         if (!response.ok) {
-          throw new Error("Failed to feetch interpretation");
+          throw new Error("Failed to fetch interpretation");
         }
-
         const data = await response.json();
-        console.log(data);
-        setFormData({
-          term: data.interpretation.term,
-          interpretation: data.interpretation.interpretation,
-        });
+        setFormData({ term: data.interpretation.term, interpretation: data.interpretation.interpretation });
       } catch (error) {
+        console.error("Error fetching interpretation:", error);
         setError("Failed to load interpretation.");
       }
     };
-
     fetchData();
-  }, []);
+  }, [params.id]); // Include params.id in the dependency array
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -43,7 +37,6 @@ export default function EditPage({ params }: { params: { id: string } }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!formData.term || !formData.interpretation) {
       setError("Please fill in all the fields");
       return;
