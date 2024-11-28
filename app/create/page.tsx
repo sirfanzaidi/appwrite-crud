@@ -1,4 +1,4 @@
-// use client; // Uncomment this line if needed (explained below)
+"use client"
 
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
