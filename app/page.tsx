@@ -1,5 +1,6 @@
 "use client";
 
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -13,25 +14,19 @@ export default function Home() {
   const [interpretations, setInterpretations] = useState<IInterpretation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     const fetchInterpretations = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("/api/interpretations");
+        const response = await fetch("api/interpretations ");
         if (!response.ok) {
           throw new Error("Failed to fetch interpretations");
         }
         const data = await response.json();
         setInterpretations(data);
       } catch (error) {
-        if (error instanceof Error) {
-          console.log("Error:", error.message);
-          setError("Failed to load interpretations, please try reloading the page.");
-        } else {
-          console.log("Unknown error occurred:", error);
-          setError("An unexpected error occurred.");
-        }
+        console.log("Error :", error);
+        setError("Faild to load interpretation, please try reloadin the page");
       } finally {
         setIsLoading(false);
       }
@@ -43,11 +38,11 @@ export default function Home() {
   const handleDelete = async (id: string) => {
     try {
       await fetch(`/api/interpretations/${id}`, { method: "DELETE" });
-      setInterpretations((prev) => prev.filter((i) => i.$id !== id));
+      setInterpretations((prevInterpretations) =>
+        prevInterpretations?.filter((i) => i.$id !== id)
+      );
     } catch (error) {
-      if (error instanceof Error) {
-        setError("Failed to delete interpretation. Please try again.");
-      }
+      setError("Failed to delete interpretation. Please try again.");
     }
   };
 
@@ -58,7 +53,7 @@ export default function Home() {
         <p>Loading interpretations...</p>
       ) : interpretations?.length > 0 ? (
         <div>
-          {interpretations.map((interpretation) => (
+          {interpretations?.map((interpretation) => (
             <div
               key={interpretation.$id}
               className="p-4 my-2 rounded-md border-b loading-8">
@@ -73,10 +68,8 @@ export default function Home() {
                     Edit
                   </Link>
 
-                  <button
-                    onClick={() => handleDelete(interpretation.$id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded-md uppercase text-sm font-bold tracking-widest"
-                  >
+                  <button  onClick={() => handleDelete(interpretation.$id)}
+                   className="bg-red-500 text-white px-4 py-2 rounded-md uppercase text-sm font-bold tracking-widest">
                     Delete
                   </button>
                 </div>
