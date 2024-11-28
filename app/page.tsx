@@ -24,7 +24,7 @@ export default function Home() {
         }
         const data = await response.json();
         setInterpretations(data);
-      } catch (error : any) {
+      } catch (error) {
         console.log("Error :", error);
         setError("Faild to load interpretation, please try reloadin the page");
       } finally {
@@ -41,7 +41,7 @@ export default function Home() {
       setInterpretations((prevInterpretations) =>
         prevInterpretations?.filter((i) => i.$id !== id)
       );
-    } catch (error : any) {
+    } catch (error) {
       setError("Failed to delete interpretation. Please try again.");
     }
   };
