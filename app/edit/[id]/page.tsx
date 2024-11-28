@@ -20,7 +20,7 @@ export default function EditPage ({params} : {params: {id: string}} ) {
         const data = await response.json();
         console.log (data);
         setFormData({term: data.interpretation.term, interpretation: data.interpretation.interpretation});
-      } catch (error) {
+      } catch (error : any) {
         setError("failed to load interpretation.")
       }
     };
@@ -60,7 +60,7 @@ export default function EditPage ({params} : {params: {id: string}} ) {
           throw new Error("Failed to update interpretation");
         }
        router.push(`/`);
-      } catch (error) {
+      } catch (error : any) {
         console.log (error);
         setError("something went wrong. Please try again.");
       } finally {

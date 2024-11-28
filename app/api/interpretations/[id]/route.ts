@@ -13,7 +13,7 @@ async function fetchInterpretation(id: string) {
       id
     );
     return interpretation;
-  } catch (error) {
+  } catch (error : any) {
     console.error("Error fetching interpretations:", error);
     throw new Error("failed to fetch interpretation");
   }
@@ -29,7 +29,7 @@ async function deleteInterpretation(id: string) {
       id
     );
     return response;
-  } catch (error) {
+  } catch (error : any) {
     console.error("Error deleting interpretations:", error);
     throw new Error("failed to delete interpretation");
   }
@@ -48,7 +48,7 @@ async function updateInterpretation
       data
     );
     return response;
-  } catch (error) {
+  } catch (error : any) {
     console.error("Error updating interpretations:", error);
     throw new Error("failed to update interpretation");
   }
@@ -69,7 +69,7 @@ export async function GET(
       }
       const interpretation = await fetchInterpretation(id);
       return NextResponse.json({ interpretation });
-    } catch (error) {
+    } catch (error : any) {
       console.error("Error in GET handler:", error);
       return NextResponse.json(
         { error: "Failed to fetch interpretation" },
@@ -86,7 +86,7 @@ export async function DELETE(
     const id = params.id;
     await deleteInterpretation(id);
     return NextResponse.json({ message: "Interpretation deleted" });
-  } catch (error) {
+  } catch (error : any) {
     return NextResponse.json(
       { error: "failed to delete interpretation" },
       { status: 500 }

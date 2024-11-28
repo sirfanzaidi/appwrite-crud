@@ -17,7 +17,7 @@ async function createInterpretation(data: {
       data
     );
     return response;
-  } catch (error) {
+  } catch (error : any) {
     console.error("error creating interpretation", error);
     throw new Error("Failed to create interpretation");
   }
@@ -32,7 +32,7 @@ async function fetchInterpretation() {
       [Query.orderDesc("$createdAt")]
     );
     return response.documents;
-  } catch (error) {
+  } catch (error : any) {
     console.error("error fatching interpretations", error);
     throw new Error("Failed to fetch interpretations");
   }
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     const data = { term, interpretation };
     const response = await createInterpretation(data);
     return NextResponse.json({ message: "interpretation created" });
-  } catch (error) {
+  } catch (error : any) {
     return NextResponse.json(
       {
         error: "Failed to create interpretation",
@@ -58,7 +58,7 @@ export async function GET() {
   try {
     const interpretations = await fetchInterpretation();
     return NextResponse.json(interpretations);
-  } catch (error) {
+  } catch (error : any) {
     return NextResponse.json(
       { error: "Failed to NEW interpretations" },
       { status: 500 }
