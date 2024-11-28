@@ -1,29 +1,35 @@
-"use client"
-import { useRouter } from "next/navigation";
-import React, { ChangeEvent, useEffect, useState } from "react";
+"use client";
 
-export default function EditPage ({params} : {params: {id: string}} ) {
+import { useRouter } from "next/navigation";
+import { ChangeEvent, useEffect, useState } from "react";
+
+export default function EditPage({ params }: { params: { id: string } }) {
   const [formData, setFormData] = useState({ term: "", interpretation: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
-  
-  useEffect (() => {
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch (`/api/interpretations/${params.id} `)
+        const response = await fetch(`/api/interpretations/${params.id}`);
         if (!response.ok) {
-          throw new Error ("Failed to feetch interpretation")
+          throw new Error("Failed to feetch interpretation");
         }
+
         const data = await response.json();
-        console.log (data);
-        setFormData({term: data.interpretation.term, interpretation: data.interpretation.interpretation});
-      } catch (error : any) {
-        setError("failed to load interpretation.")
+        console.log(data);
+        setFormData({
+          term: data.interpretation.term,
+          interpretation: data.interpretation.interpretation,
+        });
+      } catch (error) {
+        setError("Failed to load interpretation.");
       }
     };
-    fetchData ();
+
+    fetchData();
   }, []);
 
   const handleInputChange = (
@@ -35,9 +41,9 @@ export default function EditPage ({params} : {params: {id: string}} ) {
     }));
   };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!formData.term || !formData.interpretation) {
       setError("Please fill in all the fields");
       return;
@@ -50,7 +56,7 @@ export default function EditPage ({params} : {params: {id: string}} ) {
       const response = await fetch(`/api/interpretations/${params.id}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
+          "Content-type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -58,40 +64,44 @@ export default function EditPage ({params} : {params: {id: string}} ) {
       if (!response.ok) {
         throw new Error("Failed to update interpretation");
       }
-      router.push(`/`);
-    } catch (error : any) {
-      console.log (error);
-      setError("something went wrong. Please try again.");
+
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+      setError("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div>
-      <h2 className=" text-2xl font-bold my-8">Edit Interpretaion</h2>
-      <form onSubmit={handleSubmit} className="flex gap-3 flex-col ">
+      <h2 className="text-2xl font-bold my-8">Edit Interpretation</h2>
+
+      <form onSubmit={handleSubmit} className="flex gap-3 flex-col">
         <input
           type="text"
           name="term"
-          placeholder="term"
+          placeholder="Term"
           value={formData.term}
           onChange={handleInputChange}
           className="py-1 px-4 border rounded-md"
         />
+
         <textarea
-          name="interpretation "
+          name="interpretation"
           rows={4}
-          placeholder="interpretation"
+          placeholder="Interpretation"
           value={formData.interpretation}
           onChange={handleInputChange}
-          className="py-1 px-4 border rounded-none"
+          className="py-1 px-4 border rounded-md resize-none"
         ></textarea>
-        <button className="bg-black text-white mt-5 px-4 py-1 rounded-md cursor-pointer ">
+
+        <button className="bg-black text-white mt-5 px-4 py-1 rounded-md cursor-pointer">
           {isLoading ? "Updating..." : "Update Interpretation"}
         </button>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
       </form>
+      {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
-  )
+  );
 }

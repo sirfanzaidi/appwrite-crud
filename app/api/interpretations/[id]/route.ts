@@ -5,51 +5,56 @@ import { NextResponse } from "next/server";
 const database = new Databases(client);
 
 // Fetch a specific interpretation
+
 async function fetchInterpretation(id: string) {
   try {
     const interpretation = await database.getDocument(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID as string,
-      "interpretations",
+      "Interpretations",
       id
     );
     return interpretation;
   } catch (error) {
-    console.error("Error fetching interpretations:", error);
-    throw new Error("failed to fetch interpretation");
+    console.error("Error fetching interpretation:", error);
+    throw new Error("Failed to fetch interpretation");
   }
 }
 
-// Delete a specific Interpretation
+// Delete a specific interpretation
+
 async function deleteInterpretation(id: string) {
   try {
     const response = await database.deleteDocument(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID as string,
-      "interpretations",
+      "Interpretations",
       id
     );
+
     return response;
   } catch (error) {
-    console.error("Error deleting interpretations:", error);
-    throw new Error("failed to delete interpretation");
+    console.error("Error deleting interpretation:", error);
+    throw new Error("Failed to delete interpretation");
   }
 }
 
-// Update a specific Interpretation
-async function updateInterpretation(
+// Update a specific interpretation
+
+async function udpateInterpretation(
   id: string,
   data: { term: string; interpretation: string }
 ) {
   try {
     const response = await database.updateDocument(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID as string,
-      "interpretations",
+      "Interpretations",
       id,
       data
     );
+
     return response;
   } catch (error) {
-    console.error("Error updating interpretations:", error);
-    throw new Error("failed to update interpretation");
+    console.error("Error deleting interpretation:", error);
+    throw new Error("Failed to delete interpretation");
   }
 }
 
@@ -57,18 +62,11 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  console.log("Params received:", params); // Add this for debugging
   try {
     const id = params.id;
-    if (!id) {
-      return NextResponse.json(
-        { error: "Interpretation ID is required" },
-        { status: 400 }
-      );
-    }
     const interpretation = await fetchInterpretation(id);
     return NextResponse.json({ interpretation });
-  } catch { // Removed unused error variable
+  } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch interpretation" },
       { status: 500 }
@@ -84,9 +82,9 @@ export async function DELETE(
     const id = params.id;
     await deleteInterpretation(id);
     return NextResponse.json({ message: "Interpretation deleted" });
-  } catch { // Removed unused error variable
+  } catch (error) {
     return NextResponse.json(
-      { error: "failed to delete interpretation" },
+      { error: "Failed to delete interpretation" },
       { status: 500 }
     );
   }
@@ -99,11 +97,11 @@ export async function PUT(
   try {
     const id = params.id;
     const interpretation = await req.json();
-    await updateInterpretation(id, interpretation);
+    await udpateInterpretation(id, interpretation);
     return NextResponse.json({ message: "Interpretation updated" });
-  } catch { // Removed unused error variable
+  } catch (error) {
     return NextResponse.json(
-      { error: "failed to update interpretation" },
+      { error: "Failed to update interpretation" },
       { status: 500 }
     );
   }

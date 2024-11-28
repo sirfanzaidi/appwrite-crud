@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -17,15 +18,17 @@ export default function Home() {
     const fetchInterpretations = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("api/interpretations ");
+        const response = await fetch("/api/interpretations");
         if (!response.ok) {
           throw new Error("Failed to fetch interpretations");
         }
         const data = await response.json();
         setInterpretations(data);
       } catch (error) {
-        console.log("Error :", error);
-        setError("Faild to load interpretation, please try reloadin the page");
+        console.log("Error: ", error);
+        setError(
+          "Failed to load interpretations. Please try reloading the page."
+        );
       } finally {
         setIsLoading(false);
       }
@@ -55,32 +58,31 @@ export default function Home() {
           {interpretations?.map((interpretation) => (
             <div
               key={interpretation.$id}
-              className="p-4 my-2 rounded-md border-b loading-8"
+              className="p-4 my-2 rounded-md border-b leading-8"
             >
-              <div className="font-bold"> {interpretation.term}</div>
-              <div>
-                {interpretation.interpretation}
-                <div className="flex gap-4 mt-4 justify-end">
-                  <Link
-                    className="bg-slate-200 px-4 py-2 rounded-md uppercase text-sm font-bold tracking-widest"
-                    href={`/edit/${interpretation.$id}`}
-                  >
-                    Edit
-                  </Link>
+              <div className="font-bold">{interpretation.term}</div>
+              <div>{interpretation.interpretation}</div>
 
-                  <button
-                    onClick={() => handleDelete(interpretation.$id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded-md uppercase text-sm font-bold tracking-widest"
-                  >
-                    Delete
-                  </button>
-                </div>
+              <div className="flex gap-4 mt-4 justify-end">
+                <Link
+                  className="bg-slate-200 px-4 py-2 rounded-md uppercase text-sm font-bold tracking-widest"
+                  href={`/edit/${interpretation.$id}`}
+                >
+                  Edit
+                </Link>
+
+                <button
+                  onClick={() => handleDelete(interpretation.$id)}
+                  className="bg-red-500 text-white px-4 py-2 rounded-md uppercase text-sm font-bold tracking-widest"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        <p>No interpretations found</p>
+        <p>No interpretations found.</p>
       )}
     </div>
   );
