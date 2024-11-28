@@ -19,8 +19,7 @@ async function fetchInterpretation(id: string) {
   }
 }
 
-// Delete a specifice Interpretation
-
+// Delete a specific Interpretation
 async function deleteInterpretation(id: string) {
   try {
     const response = await database.deleteDocument(
@@ -35,10 +34,10 @@ async function deleteInterpretation(id: string) {
   }
 }
 
-// update a specifice Interpretation
-
-async function updateInterpretation
-(id: string, data: { term: string; interpretation: string }
+// Update a specific Interpretation
+async function updateInterpretation(
+  id: string,
+  data: { term: string; interpretation: string }
 ) {
   try {
     const response = await database.updateDocument(
@@ -55,28 +54,27 @@ async function updateInterpretation
 }
 
 export async function GET(
-    req: Request,
-    { params }: { params: { id: string } }
-  ) {
-    console.log("Params received:", params); // Add this for debugging
-    try {
-      const id = params.id;
-      if (!id) {
-        return NextResponse.json(
-          { error: "Interpretation ID is required" },
-          { status: 400 }
-        );
-      }
-      const interpretation = await fetchInterpretation(id);
-      return NextResponse.json({ interpretation });
-    } catch (error) {
-      console.error("Error in GET handler:", error);
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  console.log("Params received:", params); // Add this for debugging
+  try {
+    const id = params.id;
+    if (!id) {
       return NextResponse.json(
-        { error: "Failed to fetch interpretation" },
-        { status: 500 }
+        { error: "Interpretation ID is required" },
+        { status: 400 }
       );
     }
+    const interpretation = await fetchInterpretation(id);
+    return NextResponse.json({ interpretation });
+  } catch { // Removed unused error variable
+    return NextResponse.json(
+      { error: "Failed to fetch interpretation" },
+      { status: 500 }
+    );
   }
+}
 
 export async function DELETE(
   req: Request,
@@ -86,7 +84,7 @@ export async function DELETE(
     const id = params.id;
     await deleteInterpretation(id);
     return NextResponse.json({ message: "Interpretation deleted" });
-  } catch (error) {
+  } catch { // Removed unused error variable
     return NextResponse.json(
       { error: "failed to delete interpretation" },
       { status: 500 }
@@ -102,8 +100,8 @@ export async function PUT(
     const id = params.id;
     const interpretation = await req.json();
     await updateInterpretation(id, interpretation);
-    return NextResponse.json({ message: "Interpretation update" });
-  } catch (error) {
+    return NextResponse.json({ message: "Interpretation updated" });
+  } catch { // Removed unused error variable
     return NextResponse.json(
       { error: "failed to update interpretation" },
       { status: 500 }

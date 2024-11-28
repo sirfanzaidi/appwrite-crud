@@ -1,6 +1,4 @@
-"use client";
-
-
+"use client"
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -14,6 +12,7 @@ export default function Home() {
   const [interpretations, setInterpretations] = useState<IInterpretation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchInterpretations = async () => {
       setIsLoading(true);
@@ -56,7 +55,8 @@ export default function Home() {
           {interpretations?.map((interpretation) => (
             <div
               key={interpretation.$id}
-              className="p-4 my-2 rounded-md border-b loading-8">
+              className="p-4 my-2 rounded-md border-b loading-8"
+            >
               <div className="font-bold"> {interpretation.term}</div>
               <div>
                 {interpretation.interpretation}
@@ -68,8 +68,10 @@ export default function Home() {
                     Edit
                   </Link>
 
-                  <button  onClick={() => handleDelete(interpretation.$id)}
-                   className="bg-red-500 text-white px-4 py-2 rounded-md uppercase text-sm font-bold tracking-widest">
+                  <button
+                    onClick={() => handleDelete(interpretation.$id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded-md uppercase text-sm font-bold tracking-widest"
+                  >
                     Delete
                   </button>
                 </div>

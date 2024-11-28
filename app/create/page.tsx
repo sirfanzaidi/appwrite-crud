@@ -1,4 +1,5 @@
-"use client";
+"use client"
+
 
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
@@ -81,7 +82,7 @@ export default function CreatePage() {
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? "Adding..." : "Add Interpretation" }
+          {isLoading ? "Adding..." : "Add Interpretation"}
         </button>
       </form>
       {error && <p className="text-red-500 mt-4">{error}</p>}

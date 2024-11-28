@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 
 const database = new Databases(client);
 
-//create interpretaton
+// Create interpretation
 async function createInterpretation(data: {
-  term: string,
+  term: string;
   interpretation: string
 }) {
   try {
@@ -18,12 +18,12 @@ async function createInterpretation(data: {
     );
     return response;
   } catch (error) {
-    console.error("error creating interpretation", error);
-    throw new Error("Failed to create interpretation");
+    console.error("Error creating interpretation:", error);
+    return NextResponse.json({ error: "Failed to create interpretation" }, { status: 500 });
   }
 }
 
-//fetch interpretaton
+// Fetch interpretations
 async function fetchInterpretation() {
   try {
     const response = await database.listDocuments(
@@ -33,8 +33,8 @@ async function fetchInterpretation() {
     );
     return response.documents;
   } catch (error) {
-    console.error("error fatching interpretations", error);
-    throw new Error("Failed to fetch interpretations");
+    console.error("Error fetching interpretations:", error);
+    return NextResponse.json({ error: "Failed to fetch interpretations" }, { status: 500 });
   }
 }
 
@@ -43,14 +43,10 @@ export async function POST(req: Request) {
     const { term, interpretation } = await req.json();
     const data = { term, interpretation };
     const response = await createInterpretation(data);
-    return NextResponse.json({ message: "interpretation created" });
+    return NextResponse.json({ message: "Interpretation created" });
   } catch (error) {
-    return NextResponse.json(
-      {
-        error: "Failed to create interpretation",
-      },
-      { status: 500 }
-    );
+    console.error("Error in POST handler:", error);
+    return NextResponse.json({ error: "Failed to create interpretation" }, { status: 500 });
   }
 }
 
@@ -59,9 +55,7 @@ export async function GET() {
     const interpretations = await fetchInterpretation();
     return NextResponse.json(interpretations);
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to NEW interpretations" },
-      { status: 500 }
-    );
+    console.error("Error in GET handler:", error);
+    return NextResponse.json({ error: "Failed to fetch interpretations" }, { status: 500 });
   }
 }
