@@ -15,11 +15,12 @@ async function fetchInterpretation(id: string) {
     return interpretation;
   } catch (error) {
     console.error("Error fetching interpretations:", error);
-    return NextResponse.json({ error: "Failed to fetch interpretation" }, { status: 500 });
+    throw new Error("failed to fetch interpretation");
   }
 }
 
-// Delete a specific Interpretation
+// Delete a specifice Interpretation
+
 async function deleteInterpretation(id: string) {
   try {
     const response = await database.deleteDocument(
@@ -30,14 +31,14 @@ async function deleteInterpretation(id: string) {
     return response;
   } catch (error) {
     console.error("Error deleting interpretations:", error);
-    return NextResponse.json({ error: "Failed to delete interpretation" }, { status: 500 });
+    throw new Error("failed to delete interpretation");
   }
 }
 
-// Update a specific Interpretation
-async function updateInterpretation(
-  id: string,
-  data: { term: string; interpretation: string }
+// update a specifice Interpretation
+
+async function updateInterpretation
+(id: string, data: { term: string; interpretation: string }
 ) {
   try {
     const response = await database.updateDocument(
@@ -49,33 +50,33 @@ async function updateInterpretation(
     return response;
   } catch (error) {
     console.error("Error updating interpretations:", error);
-    return NextResponse.json({ error: "Failed to update interpretation" }, { status: 500 });
+    throw new Error("failed to update interpretation");
   }
 }
 
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  console.log("Params received:", params); // Add this for debugging
-  try {
-    const id = params.id;
-    if (!id) {
+    req: Request,
+    { params }: { params: { id: string } }
+  ) {
+    console.log("Params received:", params); // Add this for debugging
+    try {
+      const id = params.id;
+      if (!id) {
+        return NextResponse.json(
+          { error: "Interpretation ID is required" },
+          { status: 400 }
+        );
+      }
+      const interpretation = await fetchInterpretation(id);
+      return NextResponse.json({ interpretation });
+    } catch (error) {
+      console.error("Error in GET handler:", error);
       return NextResponse.json(
-        { error: "Interpretation ID is required" },
-        { status: 400 }
+        { error: "Failed to fetch interpretation" },
+        { status: 500 }
       );
     }
-    const interpretation = await fetchInterpretation(id);
-    return NextResponse.json({ interpretation });
-  } catch (error) {
-    console.error("Error in GET handler:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch interpretation" },
-      { status: 500 }
-    );
   }
-}
 
 export async function DELETE(
   req: Request,
@@ -86,9 +87,8 @@ export async function DELETE(
     await deleteInterpretation(id);
     return NextResponse.json({ message: "Interpretation deleted" });
   } catch (error) {
-    console.error("Error in DELETE handler:", error);
     return NextResponse.json(
-      { error: "Failed to delete interpretation" },
+      { error: "failed to delete interpretation" },
       { status: 500 }
     );
   }
@@ -102,11 +102,10 @@ export async function PUT(
     const id = params.id;
     const interpretation = await req.json();
     await updateInterpretation(id, interpretation);
-    return NextResponse.json({ message: "Interpretation updated" });
+    return NextResponse.json({ message: "Interpretation update" });
   } catch (error) {
-    console.error("Error in PUT handler:", error);
     return NextResponse.json(
-      { error: "Failed to update interpretation" },
+      { error: "failed to update interpretation" },
       { status: 500 }
     );
   }
